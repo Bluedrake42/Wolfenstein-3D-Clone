@@ -4,6 +4,7 @@ import moderngl as mgl
 from engine import Engine
 from settings import *
 from array import array
+import os
 
 
 class Game:
@@ -42,8 +43,12 @@ class Game:
         pg.time.set_timer(self.sound_event, 750)
 
     def show_level_menu(self):
-        # Menu options
-        levels = ["Testing Level", "Level 0", "Level 1"]
+        # Get all TMX files from levels directory
+        levels = []
+        level_files = [f for f in os.listdir('resources/levels') if f.endswith('.tmx')]
+        level_files.sort()  # Sort alphabetically
+        
+        # Create menu options from level files
         selected = 0
         
         # Create a temporary surface for text rendering
@@ -61,12 +66,12 @@ class Game:
                     sys.exit()
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_UP:
-                        selected = (selected - 1) % len(levels)
+                        selected = (selected - 1) % len(level_files)
                     elif event.key == pg.K_DOWN:
-                        selected = (selected + 1) % len(levels)
+                        selected = (selected + 1) % len(level_files)
                     elif event.key == pg.K_RETURN:
                         menu_active = False
-                        self.engine.player_attribs.num_level = selected
+                        self.engine.player_attribs.level_file = f'resources/levels/{level_files[selected]}'
                         self.engine.new_game()
             
             # Clear screen
@@ -76,11 +81,13 @@ class Game:
             text_surface.fill((0, 0, 0, 0))
             
             # Render menu options
-            for i, text in enumerate(levels):
+            for i, level_file in enumerate(level_files):
+                # Remove .tmx extension and format nicely
+                level_name = level_file.replace('.tmx', '').replace('_', ' ').title()
                 color = (255, 255, 0) if i == selected else (255, 255, 255)
-                text_surface_temp = font.render(text, True, color)
+                text_surface_temp = font.render(level_name, True, color)
                 x = int(WIN_RES.x) // 2 - text_surface_temp.get_width() // 2
-                y = int(WIN_RES.y) // 2 - len(levels) * 40 + i * 80
+                y = int(WIN_RES.y) // 2 - len(level_files) * 40 + i * 80
                 text_surface.blit(text_surface_temp, (x, y))
             
             # Convert surface to string buffer
