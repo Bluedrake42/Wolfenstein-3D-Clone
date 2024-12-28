@@ -1,6 +1,6 @@
 pygame==2.5.1
 moderngl==5.8.2
-PyGLM==2.7.0
-numpy==1.25.2
+glm>=0.4.4
+numpy>=1.26.0
 PyTMX==3.32
 
