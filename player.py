@@ -65,9 +65,9 @@ class Player(Camera):
             if self.weapons[weapon_id]:
                 self.switch_weapon(weapon_id=weapon_id)
 
-        # shooting
+        # shooting for non-automatic weapons
         if event.type == pg.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1 and not WEAPON_SETTINGS[self.weapon_id]['is_automatic']:
                 self.do_shot()
 
     def update(self):
@@ -78,6 +78,10 @@ class Player(Camera):
         self.check_health()
         self.update_tile_position()
         self.pick_up_item()
+        # Check for automatic weapon firing
+        if pg.mouse.get_pressed()[0]:  # Left mouse button
+            if self.weapon_id != ID.KNIFE_0 and WEAPON_SETTINGS[self.weapon_id]['is_automatic']:
+                self.do_shot()
 
     def check_health(self):
         if self.health <= 0:

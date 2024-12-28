@@ -184,19 +184,22 @@ WEAPON_SETTINGS = {
         'ammo_consumption': 0,
         'damage': 8,
         'max_dist': 2,
-        'miss_probability': 0.3
+        'miss_probability': 0.3,
+        'is_automatic': False
     },
     ID.PISTOL_0: {
         'ammo_consumption': 1,
         'damage': 20,
         'max_dist': 10,
-        'miss_probability': 0.1
+        'miss_probability': 0.1,
+        'is_automatic': False
     },
     ID.RIFLE_0: {
         'ammo_consumption': 2,
         'damage': 41,
         'max_dist': 30,
-        'miss_probability': 0.045
+        'miss_probability': 0.045,
+        'is_automatic': True
     },
 }
 
