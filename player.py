@@ -178,7 +178,7 @@ class Player(Camera):
                 #
                 self.eng.player_attribs.update(player=self)
                 self.eng.player_attribs.num_level += 1
-                self.eng.player_attribs.num_level %= NUM_LEVELS
+                # No need for modulo with NUM_LEVELS, engine will handle cycling
                 self.eng.new_game()
             # Don't do anything if it's a key door and player has no key
             return None

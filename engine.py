@@ -7,6 +7,7 @@ from level_map import LevelMap
 from textures import Textures
 from sound import Sound
 import pygame as pg
+import os
 
 
 class Engine:
@@ -28,13 +29,35 @@ class Engine:
         self.path_finder: PathFinder = None
         self.new_game()
 
+    def get_available_levels(self):
+        # Get list of available level files
+        levels = []
+        levels_dir = 'resources/levels'
+        # Add testing level if it exists
+        if os.path.exists(f'{levels_dir}/testing.tmx'):
+            levels.append('testing.tmx')
+        # Add numbered levels
+        i = 0
+        while os.path.exists(f'{levels_dir}/level_{i}.tmx'):
+            levels.append(f'level_{i}.tmx')
+            i += 1
+        return levels
+
     def new_game(self):
         pg.mixer.music.play(-1)
         self.player = Player(self)
         self.shader_program = ShaderProgram(self)
-        self.level_map = LevelMap(
-            self, tmx_file=f'level_{self.player_attribs.num_level}.tmx'
-        )
+        
+        # Get available levels and handle cycling
+        available_levels = self.get_available_levels()
+        if not available_levels:
+            raise FileNotFoundError("No level files found!")
+            
+        # Cycle through available levels
+        level_index = self.player_attribs.num_level % len(available_levels)
+        level_file = available_levels[level_index]
+        
+        self.level_map = LevelMap(self, tmx_file=level_file)
         self.ray_casting = RayCasting(self)
         self.path_finder = PathFinder(self)
         self.scene = Scene(self)
